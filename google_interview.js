@@ -8,6 +8,7 @@ Given nums = [2, 2, 3], target = 6,
 Return [].
 */
 
+// sorted
 function findSum(arr, target) {
   let left = 0,
     right = arr.length - 1;
@@ -25,5 +26,21 @@ function findSum(arr, target) {
   return [];
 }
 
-const nums = [2, 7, 11, 15];
-console.log(findSum(nums, 9));
+// Not sorted
+function findSum2(array, target) {
+  // make a set to save compliment of numbers
+  const compliments = new Set();
+  // loop through the array, subtract curr number from target and check if it's in hash return true
+  // add the curr number to set
+  for (let i = 0; i < array.length; i++) {
+    const compliment = target - array[i];
+    if (compliments.has(compliment)) {
+      return [compliment, array[i]];
+    }
+    compliments.add(array[i]);
+  }
+  // return false if no compliment is found at the end of loop
+  return [];
+}
+
+console.log(findSum2([2, 7, 11, 15, 6, 8], 12));
