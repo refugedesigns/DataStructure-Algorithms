@@ -1,8 +1,8 @@
 class Node {
   constructor(value) {
-    this.previous = null;
     this.value = value;
     this.next = null;
+    this.prev = null;
   }
 }
 
@@ -14,26 +14,28 @@ class LinkedList {
   }
 
   append(value) {
+    //[2,8] -> 5 -> [2,8,5]
     const newNode = new Node(value);
-    newNode.previous = this.tail;
+    newNode.prev = this.tail;
     this.tail.next = newNode;
     this.tail = newNode;
     this.length++;
     return this.printList();
   }
 
-  // [23, 45, 23, 5]
   prepend(value) {
+    //[2,8] -> 5 -> [5,2,8]
     const newNode = new Node(value);
-    newNode.next = this.head;
-    this.head.previous = newNode;
+    const holdingPointer = this.head;
     this.head = newNode;
+    holdingPointer.prev = newNode;
+    newNode.next = holdingPointer;
     this.length++;
     return this.printList();
   }
 
   insert(index, value) {
-    if (index === 0) {
+    if (index <= 0) {
       this.prepend(value);
       return this.printList();
     }
@@ -43,24 +45,43 @@ class LinkedList {
       return this.printList();
     }
 
+    //[3,5,1,7] -> 2 at index 2 -> [3,5,2,1,7]
     const newNode = new Node(value);
-    const leadNode = this._traverseToIndex(index - 1);
-    const holdingPinter = leadNode.next;
-    newNode.previous = leadNode;
+    const leadNode = this._traversToIndex(index - 1);
+    const follower = leadNode.next;
+    newNode.prev = leadNode;
     leadNode.next = newNode;
-    newNode.next = holdingPinter;
+    newNode.next = follower;
+    follower.prev = newNode;
     this.length++;
     return this.printList();
   }
 
   remove(index) {
-    const leadNode = this._traverseToIndex(index - 1);
-    leadNode.next = leadNode.next.next;
+    // [4,5,9,2] -> 1 -> [4,9,2]
+    if (index <= 0) {
+      const holdingPointer = this.head;
+      this.head = holdingPointer.next;
+      this.head.prev = null;
+      this.length--;
+      return this.printList();
+    }
+
+    let leadNode = this._traversToIndex(index - 1);
+    let holdingPointer = leadNode.next;
+    leadNode.next = holdingPointer.next;
+    holdingPointer.prev = leadNode;
+    this.length--;
+    return this.printList();
   }
 
-  _traverseToIndex(index) {
+  _traversToIndex(index) {
+    //check if index is a valid number
+    if (index <= 0) {
+      return this.head;
+    }
     let currNode = this.head;
-    let counter = 0
+    let counter = 0;
     while (counter !== index) {
       currNode = currNode.next;
       counter++;
@@ -79,11 +100,11 @@ class LinkedList {
   }
 }
 
-const myList = new LinkedList(23);
-myList.append(4);
-myList.append(29);
-myList.prepend(45);
-myList.prepend(65);
-myList.insert(2, 44);
-myList.remove(4);
+const myList = new LinkedList(4);
+myList.append(9);
+myList.append(12);
+myList.prepend(34);
+myList.prepend(56);
+myList.insert(3, 28);
+myList.remove(2)
 console.log(myList.printList());
