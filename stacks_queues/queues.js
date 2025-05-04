@@ -7,61 +7,59 @@ class Node {
 
 class Queue {
   constructor() {
-    this.top = null;
-    this.bottom = null;
+    this.first = null;
+    this.last = null;
     this.length = 0;
   }
 
   peek() {
-    return this.top;
+    return this.first;
   }
 
   enqueue(value) {
     const newNode = new Node(value);
 
-    if (!this.top) {
-      this.top = newNode;
-      this.bottom = newNode;
-      this.length++;
-      return this.printQueue();
+    if (!this.first) {
+      this.first = newNode;
+      this.last = newNode;
+    } else {
+      this.last.next = newNode;
+      this.last = newNode;
     }
-
-    this.bottom.next = newNode;
-    this.bottom = newNode;
     this.length++;
     return this.printQueue();
   }
 
   dequeue() {
-    if(!this.top) {
-        return null;
+    if (!this.first) {
+      return null;
     }
 
-    if(this.top === this.bottom) {
-        this.bottom = null;
+    if (this.first === this.last) {
+      this.last = null;
     }
 
-    const holdingPointer = this.top;
-    this.top = this.top.next;
-    this.length--
+    const holdingPointer = this.first;
+    this.first = this.first.next;
+    this.length--;
     return holdingPointer.value;
   }
 
   printQueue() {
-    const array = []
-    let currNode = this.top 
-    while(currNode) {
-        array.push(currNode.value)
-        currNode = currNode.next;
+    const array = [];
+    let currNode = this.first;
+    while (currNode) {
+      array.push(currNode.value);
+      currNode = currNode.next;
     }
-    return array
+    return array;
   }
 }
 
-const myQueue = new Queue()
-myQueue.enqueue(8)
-myQueue.enqueue(23)
-myQueue.enqueue(3)
-myQueue.enqueue(12)
-myQueue.dequeue()
-console.log(myQueue.printQueue())
+const myQueue = new Queue();
+myQueue.enqueue(8);
+myQueue.enqueue(23);
+myQueue.enqueue(3);
+myQueue.enqueue(12);
+myQueue.dequeue();
+console.log(myQueue.printQueue());
