@@ -136,6 +136,21 @@ class BinarySearchTree {
         }
     }
   }
+
+  breathFirstSearch() {
+    const list = []
+    const queue = []
+
+    queue.push(this.root)
+    while(queue.length > 0) {
+      let currentNode = queue.shift()
+      list.push(currentNode.value)
+      if(currentNode.left) queue.push(currentNode.left)
+      if(currentNode.right) queue.push(currentNode.right)
+    }
+
+    return list
+  }
 }
 
 function traverse(node) {
@@ -154,4 +169,4 @@ tree.insert(170);
 tree.insert(15);
 tree.insert(1);
 tree.remove(170)
-console.log(traverse(tree.root));
+console.log(tree.breathFirstSearch());
